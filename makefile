@@ -1,5 +1,5 @@
 build:
-	gcc -I/opt/homebrew/Cellar/sdl2/2.30.3/include -L/opt/homebrew/Cellar/sdl2/2.30.3/lib -lSDL2 -Wall -std=c99 -o renderer ./src/main.c
+	gcc -I/opt/homebrew/Cellar/sdl2/2.30.3/include -L/opt/homebrew/Cellar/sdl2/2.30.3/lib -Wall -std=c99 ./src/*.c -lSDL2 -o renderer
 run:
 	./renderer 
 clean:
