@@ -4,3 +4,5 @@ run:
 	./renderer 
 clean:
 	rm renderer
+br:
+	make build && make run

@@ -1,42 +1,23 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include "display.h"
 
 bool is_running = false;
-SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
-
-bool initialize_window(void) {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        fprintf(stderr, "Error initializing SDL.\n");
-        return false;
-    }
-    // Create a SDL Window
-    window = SDL_CreateWindow(
-        NULL,
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        800,
-        600,
-        SDL_WINDOW_BORDERLESS
-    );
-    if (!window) {
-        fprintf(stderr, "Error creating SDL window.\n");
-        return false;
-    }
-
-    // Create a SDL renderer
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    if (!renderer) {
-        fprintf(stderr, "Error creating SDL renderer.\n");
-        return false;
-    }
-
-    return true;
-}
 
 void setup(void) {
-    // TODO:
+    // Allocate the required memory in bytes to hold the color buffer
+    color_buffer = (uint32_t*) malloc(sizeof(uint32_t) * window_width * window_height);
+
+    // Creating a SDL texture that is used to display the color buffer
+    color_buffer_texture = SDL_CreateTexture(
+        renderer,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING,
+        window_width,
+        window_height
+    );
 }
 
 void process_input(void) {
@@ -59,10 +40,15 @@ void update(void) {
 }
 
 void render(void) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    //...
+    draw_grid();
+
+    draw_rect(300, 200, 300, 150, 0xFFFF00FF);
+
+    render_color_buffer();
+    clear_color_buffer(0xFF000000);
 
     SDL_RenderPresent(renderer);
 }
@@ -77,6 +63,8 @@ int main(void) {
         update();
         render();
     }
+
+    destroy_window();
 
     return 0;
 }
