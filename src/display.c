@@ -51,6 +51,16 @@ void draw_grid(void) {
     }
 }
 
+void draw_pixel(int x, int y, uint32_t color) {
+    // Do some checking.
+    // To be fair though, when are we ever going to pass 'bad' values?
+    // Gustavo wasn't checking for < 0 for some reason...?
+    // He said we could replace && with || ?
+    // I don't think that's possible
+    if (x >= 0 && x < window_width && y >= 0 && y < window_height)
+    color_buffer[(y * window_width) + x] = color;
+}
+
 void draw_rect(int x, int y, int width, int height, uint32_t color) {
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
