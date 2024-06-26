@@ -15,7 +15,10 @@ vec2_t cube_points_2D[N_POINTS];
 float fov_factor = 128;
 
 vec2_t project(vec3_t point) {
-    vec2_t point_2D = { fov_factor * point.x, fov_factor * point.y };
+    vec2_t point_2D = { 
+        fov_factor * point.x / point.z,
+        fov_factor * point.y / point.z 
+    };
     return point_2D;
 }
 
