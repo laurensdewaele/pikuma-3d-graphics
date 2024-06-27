@@ -70,7 +70,11 @@ void process_input(void) {
 }
 
 void update(void) {
-    while (SDL_GetTicks() - previous_elapsed_ms <= FRAME_TARGET_TIME);
+    int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_elapsed_ms);
+    if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
+        SDL_Delay(time_to_wait);
+    }
+
     previous_elapsed_ms = SDL_GetTicks();
 
     // Rotate the cube around all three axes
