@@ -10,7 +10,7 @@ bool is_running = false;
 const int N_POINTS = 9 * 9 * 9;
 vec3_t cube_points[N_POINTS];
 vec2_t cube_points_2D[N_POINTS];
-
+vec3_t cube_rotation = { 0, 0, 0};
 vec3_t camera_position = { 0, 0, -5 }; 
 
 // Why 128?
@@ -68,11 +68,22 @@ void process_input(void) {
 }
 
 void update(void) {
+    // Rotate the cube around all three axes
+    cube_rotation.x += 0.001;
+    cube_rotation.y += 0.001;
+    cube_rotation.z += 0.001;
+
     // Project our 3D cube points to 2D ones
     for (int i = 0; i < N_POINTS; i++) {
         vec3_t point = cube_points[i];
-        point.z -= camera_position.z;
-        vec2_t point_2D = project(point);
+        // Add the rotation to each point
+        // And apply the rotation
+        vec3_t transformed_point = vec3_rotate_x(point, cube_rotation.x); 
+        transformed_point = vec3_rotate_y(transformed_point, cube_rotation.y); 
+        transformed_point = vec3_rotate_z(transformed_point, cube_rotation.z); 
+        transformed_point.z -= camera_position.z;
+        vec2_t point_2D = project(transformed_point);
+        
         cube_points_2D[i] = point_2D;
     }
 }
