@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include "SDL2/SDL_timer.h"
 #include "display.h"
 #include "vector.h"
 
@@ -13,8 +14,9 @@ vec2_t cube_points_2D[N_POINTS];
 vec3_t cube_rotation = { 0, 0, 0};
 vec3_t camera_position = { 0, 0, -5 }; 
 
-// Why 128?
 float fov_factor = 640;
+
+int previous_elapsed_ms = 0;
 
 vec2_t project(vec3_t point) {
     vec2_t point_2D = { 
@@ -68,6 +70,9 @@ void process_input(void) {
 }
 
 void update(void) {
+    while (SDL_GetTicks() - previous_elapsed_ms <= FRAME_TARGET_TIME);
+    previous_elapsed_ms = SDL_GetTicks();
+
     // Rotate the cube around all three axes
     cube_rotation.x += 0.001;
     cube_rotation.y += 0.001;
@@ -83,7 +88,7 @@ void update(void) {
         transformed_point = vec3_rotate_z(transformed_point, cube_rotation.z); 
         transformed_point.z -= camera_position.z;
         vec2_t point_2D = project(transformed_point);
-        
+
         cube_points_2D[i] = point_2D;
     }
 }
